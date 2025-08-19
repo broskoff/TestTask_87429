@@ -71,7 +71,7 @@
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="buttonTapped" destination="BYZ-38-t0r" eventType="touchUpInside" id="q6w-oB-5Ae"/>
-                                    <segue destination="dFc-Dw-9FT" kind="show" id="b7y-M9-HeI"/>
+                                    <segue destination="dFc-Dw-9FT" kind="show" id="CYm-Uu-Dhe"/>
                                 </connections>
                             </button>
                         </subviews>
