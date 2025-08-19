@@ -15,22 +15,23 @@ class SecondViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-       
     }
     
     //вызов сообщения по нажатию на кнопку "Приветствие"
     @IBAction func showGreating() {
-        alert(message: "Привет, \(name!)", style: .alert)
+        showAlert(message: "Привет, \(name!)")
     }
-    
-    //создаю модальное окно с сообщением, для вызова по нажатию на кнопку "Приветствие"
-    func alert(message: String, style: UIAlertController.Style) {
-      
-        let alertController = UIAlertController(title: nil, message: message, preferredStyle: style)
-        let action = UIAlertAction(title: "закрыть", style: .default)
-        alertController.addAction(action)
-        self.present(alertController, animated: true, completion: nil)
-    }
+}
 
+
+//MARK: -Расширение класса SecondViewController
+extension SecondViewController {
+    //создаю модальное окно с сообщением, для вызова по нажатию на кнопку "Приветствие"
+    private func showAlert(message: String) {
+      
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let closeAction = UIAlertAction(title: "закрыть", style: .default)
+        alert.addAction(closeAction)
+        present(alert, animated: true)
+    }
 }

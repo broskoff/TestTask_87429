@@ -71,7 +71,6 @@
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="buttonTapped" destination="BYZ-38-t0r" eventType="touchUpInside" id="q6w-oB-5Ae"/>
-                                    <segue destination="dFc-Dw-9FT" kind="show" id="CYm-Uu-Dhe"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -92,11 +91,12 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="dateField" destination="Kmj-t9-uB0" id="Oue-IX-GHt"/>
+                        <outlet property="birthDateTF" destination="Kmj-t9-uB0" id="Oue-IX-GHt"/>
                         <outlet property="nameTF" destination="cea-9p-HN5" id="mMa-i8-NcW"/>
                         <outlet property="passwordTF" destination="bdE-V9-m0m" id="NN9-jd-hUp"/>
                         <outlet property="repeatPasswordTF" destination="VNP-ZD-lqx" id="eKP-yS-7Oh"/>
                         <outlet property="surnameTF" destination="oaF-Do-GFS" id="60n-wI-JE5"/>
+                        <segue destination="dFc-Dw-9FT" kind="show" identifier="goToSecondVC" id="8yW-k3-KQS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
