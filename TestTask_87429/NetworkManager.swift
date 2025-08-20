@@ -11,8 +11,10 @@ class NetworkManager {
     
     static let shared = NetworkManager()
     
+    //url + путь
     let url = "https://fakestoreapi.com/products/1"
     
+    //запрос
     func sendRequest(completion: @escaping (String, Float) -> Void) {
         
         guard let url = URL(string: url) else { return }

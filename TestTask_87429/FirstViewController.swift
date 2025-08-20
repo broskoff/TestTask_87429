@@ -74,6 +74,7 @@ class FirstViewController: UIViewController {
               let password = passwordTF.text,
               let repeatPassword = repeatPasswordTF.text else { return }
         
+        //раскоментировать в конце:
         if name.isEmpty || surname.isEmpty || password.isEmpty || repeatPassword.isEmpty {
             showAlert(title: "Недостаточно информации",
                       message: "Для успешной регистрации, пожалуйста, заполните все поля")

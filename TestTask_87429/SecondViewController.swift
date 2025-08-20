@@ -8,8 +8,10 @@
 import UIKit
 
 class SecondViewController: UIViewController {
-    private var titleProduct: String = ""
-    private var priceProduct: Float = 0
+    
+    var titleProduct: String!
+    var priceProduct: Float!
+    var arrayData: [String] = []
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -24,12 +26,11 @@ class SecondViewController: UIViewController {
         
         //возвращение данных сетевого запроса, которые будем передавать в таблицу на втором экране. Возможно это на втором экране и надо вызывать
         NetworkManager.shared.sendRequest() { [weak self] title, price in
-            
             DispatchQueue.main.async {
                 guard let self else { return }
                 
-                self.titleProduct = title
-                self.priceProduct = price
+                self.arrayData.append(title)
+                self.arrayData.append(String(price))
                 
                 self.tableView.reloadData()
             }
@@ -63,18 +64,28 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
     
     //количество ячеек в секции
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+
+        return arrayData.count
     }
     
-    //сама ячейка, отображает только title, price не отображает
+    //сама ячейка
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
-        cell.textLabel?.text = "\(titleProduct)"
+        let model = arrayData[indexPath.row]
+        var listConfiguration = cell.defaultContentConfiguration()
+        var backgroundConfiguration = cell.backgroundConfiguration
         
-        let cellTwo = tableView.dequeueReusableCell(withIdentifier: "cellTwo")!
-        cellTwo.textLabel?.text = "\(priceProduct)"
+        listConfiguration.text = "\(model)"
+        listConfiguration.textProperties.numberOfLines = 0
+        listConfiguration.textProperties.font = UIFont.systemFont(ofSize: 24)
         
+        backgroundConfiguration?.cornerRadius = 8
+        backgroundConfiguration?.backgroundInsets = .init(top: 5, leading: 5, bottom: 5, trailing: 5)
+        
+        cell.contentConfiguration = listConfiguration
+        cell.backgroundConfiguration = backgroundConfiguration
         return cell
     }
     
