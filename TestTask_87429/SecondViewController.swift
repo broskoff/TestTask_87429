@@ -8,8 +8,6 @@
 import UIKit
 
 class SecondViewController: UIViewController {
-    private var titleProduct: String = ""
-    private var priceProduct: Float = 0
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -24,16 +22,11 @@ class SecondViewController: UIViewController {
         
         //возвращение данных сетевого запроса, которые будем передавать в таблицу на втором экране. Возможно это на втором экране и надо вызывать
         NetworkManager.shared.sendRequest() { [weak self] title, price in
-            
             DispatchQueue.main.async {
                 guard let self else { return }
-                
-                self.titleProduct = title
-                self.priceProduct = price
-                
-                self.tableView.reloadData()
+                print(title)
+                print(price)
             }
-            
         }
         
     }
@@ -63,17 +56,14 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
     
     //количество ячеек в секции
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
         return 2
     }
     
-    //сама ячейка, отображает только title, price не отображает
+    //сама ячейка
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
-        cell.textLabel?.text = "\(titleProduct)"
-        
-        let cellTwo = tableView.dequeueReusableCell(withIdentifier: "cellTwo")!
-        cellTwo.textLabel?.text = "\(priceProduct)"
+    
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
         return cell
     }
