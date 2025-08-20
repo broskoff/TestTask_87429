@@ -9,8 +9,6 @@ import UIKit
 
 class FirstViewController: UIViewController {
     
-    private let networkManager = NetworkManager()
-    
     @IBOutlet weak var nameTF: UITextField!
     @IBOutlet weak var surnameTF: UITextField!
     @IBOutlet weak var passwordTF: UITextField!
@@ -27,11 +25,7 @@ class FirstViewController: UIViewController {
 
         createDatePicker()
         
-        //возвращение данных сетевого запроса, которые будем передавать в таблицу на втором экране. Возможно это на втором экране и надо вызывать
-        networkManager.sendRequest() { title, price in
-            print(title)
-            print(price)
-        }
+        
     }
     
     

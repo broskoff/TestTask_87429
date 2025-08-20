@@ -8,25 +8,47 @@
 import UIKit
 
 class SecondViewController: UIViewController {
-
-    @IBOutlet weak var table: UITableView!
+    private var titleProduct: String = ""
+    private var priceProduct: Float = 0
+    
+    @IBOutlet weak var tableView: UITableView!
     
     var name: String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        //возвращение данных сетевого запроса, которые будем передавать в таблицу на втором экране. Возможно это на втором экране и надо вызывать
+        NetworkManager.shared.sendRequest() { [weak self] title, price in
+            
+            DispatchQueue.main.async {
+                guard let self else { return }
+                
+                self.titleProduct = title
+                self.priceProduct = price
+                
+                self.tableView.reloadData()
+            }
+            
+        }
+        
     }
     
     //вызов сообщения по нажатию на кнопку "Приветствие"
     @IBAction func showGreating() {
         showAlert(message: "Привет, \(name!)")
     }
+    
 }
 
 
 //MARK: -Расширение класса SecondViewController
 extension SecondViewController {
-    //создаю модальное окно с сообщением, для вызова по нажатию на кнопку "Приветствие"
+    //создаю окно с сообщением, для вызова по нажатию на кнопку "Приветствие"
     private func showAlert(message: String) {
       
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
@@ -34,4 +56,27 @@ extension SecondViewController {
         alert.addAction(closeAction)
         present(alert, animated: true)
     }
+}
+
+//MARK: -UITableViewDelegate, UITableViewDataSource
+extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    //количество ячеек в секции
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 2
+    }
+    
+    //сама ячейка, отображает только title, price не отображает
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
+        cell.textLabel?.text = "\(titleProduct)"
+        
+        let cellTwo = tableView.dequeueReusableCell(withIdentifier: "cellTwo")!
+        cellTwo.textLabel?.text = "\(priceProduct)"
+        
+        return cell
+    }
+    
+    
 }

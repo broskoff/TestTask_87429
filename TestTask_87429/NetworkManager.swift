@@ -9,6 +9,8 @@ import Foundation
 
 class NetworkManager {
     
+    static let shared = NetworkManager()
+    
     let url = "https://fakestoreapi.com/products/1"
     
     func sendRequest(completion: @escaping (String, Float) -> Void) {
