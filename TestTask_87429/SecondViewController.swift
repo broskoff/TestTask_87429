@@ -9,6 +9,10 @@ import UIKit
 
 class SecondViewController: UIViewController {
     
+    var titleProduct: String!
+    var priceProduct: Float!
+    var arrayData: [String] = []
+    
     @IBOutlet weak var tableView: UITableView!
     
     var name: String!
@@ -24,9 +28,13 @@ class SecondViewController: UIViewController {
         NetworkManager.shared.sendRequest() { [weak self] title, price in
             DispatchQueue.main.async {
                 guard let self else { return }
-                print(title)
-                print(price)
+                
+                self.arrayData.append(title)
+                self.arrayData.append(String(price))
+                
+                self.tableView.reloadData()
             }
+            
         }
         
     }
@@ -57,7 +65,7 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
     //количество ячеек в секции
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return 2
+        return arrayData.count
     }
     
     //сама ячейка
@@ -65,6 +73,19 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
     
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
+        let model = arrayData[indexPath.row]
+        var listConfiguration = cell.defaultContentConfiguration()
+        var backgroundConfiguration = cell.backgroundConfiguration
+        
+        listConfiguration.text = "\(model)"
+        listConfiguration.textProperties.numberOfLines = 0
+        listConfiguration.textProperties.font = UIFont.systemFont(ofSize: 24)
+        
+        backgroundConfiguration?.cornerRadius = 8
+        backgroundConfiguration?.backgroundInsets = .init(top: 5, leading: 5, bottom: 5, trailing: 5)
+        
+        cell.contentConfiguration = listConfiguration
+        cell.backgroundConfiguration = backgroundConfiguration
         return cell
     }
     
