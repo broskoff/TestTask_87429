@@ -17,16 +17,19 @@ class FirstViewController: UIViewController {
     @IBOutlet weak var birthDateTF: UITextField!
     let datePicker = UIDatePicker()
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         passwordTF.isSecureTextEntry = true
         repeatPasswordTF.isSecureTextEntry = true
-
+        
         createDatePicker()
         
-        
+        nameTF.text = UserSettings.userName
     }
+    
     
     
     //MARK: -передача имени на второй экран
@@ -72,16 +75,20 @@ class FirstViewController: UIViewController {
         guard let name = nameTF.text,
               let surname = surnameTF.text,
               let password = passwordTF.text,
-              let repeatPassword = repeatPasswordTF.text else { return }
+              let repeatPassword = repeatPasswordTF.text,
+              let date = birthDateTF.text else { return }
         
         //раскоментировать в конце:
-        if name.isEmpty || surname.isEmpty || password.isEmpty || repeatPassword.isEmpty {
+        if name.isEmpty || surname.isEmpty || password.isEmpty || repeatPassword.isEmpty || date.isEmpty {
             showAlert(title: "Недостаточно информации",
                       message: "Для успешной регистрации, пожалуйста, заполните все поля")
         }
         
         //добавлен переход с идентификатором, для возможности задать условия для перехода
         performSegue(withIdentifier: "goToSecondVC", sender: nil)
+        
+        //сохраняю имя в локальное хранилище
+        UserSettings.userName = name
     }
     
 }
