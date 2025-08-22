@@ -13,6 +13,7 @@ class SecondViewController: UIViewController {
     var priceProduct: Float!
     var arrayData: [String] = []
     
+    
     @IBOutlet weak var tableView: UITableView!
     
     var name: String!
@@ -64,7 +65,6 @@ extension SecondViewController: UITableViewDelegate, UITableViewDataSource {
     
     //количество ячеек в секции
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
         return arrayData.count
     }
     

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FirstViewController: UIViewController {
+class FirstViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var nameTF: UITextField!
     @IBOutlet weak var surnameTF: UITextField!
@@ -22,22 +22,62 @@ class FirstViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        passwordTF.isSecureTextEntry = true
-        repeatPasswordTF.isSecureTextEntry = true
+        nameTF.delegate = self
+        surnameTF.delegate = self
+        passwordTF.delegate = self
+        repeatPasswordTF.delegate = self
+        birthDateTF.delegate = self
         
         createDatePicker()
         
+        passwordTF.isSecureTextEntry = true
+        repeatPasswordTF.isSecureTextEntry = true
+        
+        
+        
+        //достаю из хранилища имя (если оно там есть)
         nameTF.text = UserSettings.userName
     }
     
     
+    //MARK: -валидация текстовых полей
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        guard nameTF.text?.isEmpty == false else { return }
+        
+        if textField == nameTF {
+            if let _ = Double(nameTF.text!) {
+                showAlert(title: "Ошибка", message: "Имя должно состоять только из букв") {
+                    self.nameTF.text = ""
+                }
+            }
+        } else if textField == surnameTF {
+            if let _ = Double(surnameTF.text!) {
+                showAlert(title: "Ошибка", message: "Фамилия может содержать только буквы") {
+                    self.surnameTF.text = ""
+                }
+            }
+        } else if textField == repeatPasswordTF {
+            if repeatPasswordTF.text != passwordTF.text {
+                showAlert(title: "Ошибка", message: "Введенный текст должен совпадать с паролем") {
+                    self.repeatPasswordTF.text = ""
+                }
+            }
+        }
+    }
     
-    //MARK: -передача имени на второй экран
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let destinationVC = segue.destination as? SecondViewController else { return }
-        destinationVC.name = nameTF.text
+    //MARK: - запрет на ручной ввод в поле с датой
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == birthDateTF {
+            return false
+        }
+        return true
     }
 
+    //MARK: -скрытие клавиатуры по нажатию кнопки done на ней же
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        view.endEditing(true)
+    }
+    
     //MARK: -настраиваю выборщик даты в поле "Укажите дату"
     func createDatePicker() {
         
@@ -51,7 +91,7 @@ class FirstViewController: UIViewController {
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneAction))
+        let doneButton = UIBarButtonItem(title: "готово", style: .plain, target: self, action: #selector(doneAction))
         
         toolBar.setItems([flexSpace, doneButton], animated: true)
         birthDateTF.inputAccessoryView = toolBar
@@ -77,8 +117,7 @@ class FirstViewController: UIViewController {
               let password = passwordTF.text,
               let repeatPassword = repeatPasswordTF.text,
               let date = birthDateTF.text else { return }
-        
-        //раскоментировать в конце:
+
         if name.isEmpty || surname.isEmpty || password.isEmpty || repeatPassword.isEmpty || date.isEmpty {
             showAlert(title: "Недостаточно информации",
                       message: "Для успешной регистрации, пожалуйста, заполните все поля")
@@ -91,16 +130,26 @@ class FirstViewController: UIViewController {
         UserSettings.userName = name
     }
     
+    
+    //MARK: -передача имени на второй экран
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let destinationVC = segue.destination as? SecondViewController else { return }
+        destinationVC.name = nameTF.text
+    }
+    
+    
 }
 
 //MARK: -Расширение FirstViewController
 extension FirstViewController {
     
     //создаю предупреждение, если поля не заполненны полностью
-    private func showAlert(title: String, message: String) {
+    private func showAlert(title: String, message: String, completion: (() -> Void)? = nil) {
       
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default)
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+            completion?()
+        }
         alert.addAction(okAction)
         present(alert, animated: true)
     }

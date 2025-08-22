@@ -8,9 +8,9 @@
 import Foundation
 
 class UserSettings {
-    
     private enum SettingsKeys: String {
         case userName
+        case userModel
     }
     
     static var userName: String! {
