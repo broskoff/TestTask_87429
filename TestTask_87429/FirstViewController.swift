@@ -13,11 +13,8 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var surnameTF: UITextField!
     @IBOutlet weak var passwordTF: UITextField!
     @IBOutlet weak var repeatPasswordTF: UITextField!
-    
     @IBOutlet weak var birthDateTF: UITextField!
     let datePicker = UIDatePicker()
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,20 +25,19 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         repeatPasswordTF.delegate = self
         birthDateTF.delegate = self
         
-        createDatePicker()
-        
         passwordTF.isSecureTextEntry = true
         repeatPasswordTF.isSecureTextEntry = true
         
-        
-        
         //достаю из хранилища имя (если оно там есть)
         nameTF.text = UserSettings.userName
+        
+        createDatePicker()
     }
     
     
     //MARK: -валидация текстовых полей
     func textFieldDidEndEditing(_ textField: UITextField) {
+        
         guard nameTF.text?.isEmpty == false else { return }
         
         if textField == nameTF {
@@ -66,7 +62,9 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
     }
     
     //MARK: - запрет на ручной ввод в поле с датой
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
         if textField == birthDateTF {
             return false
         }
@@ -78,7 +76,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         view.endEditing(true)
     }
     
-    //MARK: -настраиваю выборщик даты в поле "Укажите дату"
+    //MARK: -настраиваю выборщик даты
     func createDatePicker() {
         
         birthDateTF.inputView = datePicker
@@ -90,8 +88,13 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(title: "готово", style: .plain, target: self, action: #selector(doneAction))
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
+                                        target: nil,
+                                        action: nil)
+        let doneButton = UIBarButtonItem(title: "готово",
+                                         style: .plain,
+                                         target: self,
+                                         action: #selector(doneAction))
         
         toolBar.setItems([flexSpace, doneButton], animated: true)
         birthDateTF.inputAccessoryView = toolBar
@@ -117,7 +120,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
               let password = passwordTF.text,
               let repeatPassword = repeatPasswordTF.text,
               let date = birthDateTF.text else { return }
-
+        //создаю предупреждение, если поля не заполненны полностью
         if name.isEmpty || surname.isEmpty || password.isEmpty || repeatPassword.isEmpty || date.isEmpty {
             showAlert(title: "Недостаточно информации",
                       message: "Для успешной регистрации, пожалуйста, заполните все поля")
@@ -137,13 +140,7 @@ class FirstViewController: UIViewController, UITextFieldDelegate {
         destinationVC.name = nameTF.text
     }
     
-    
-}
-
-//MARK: -Расширение FirstViewController
-extension FirstViewController {
-    
-    //создаю предупреждение, если поля не заполненны полностью
+    //MARK: -alert
     private func showAlert(title: String, message: String, completion: (() -> Void)? = nil) {
       
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)

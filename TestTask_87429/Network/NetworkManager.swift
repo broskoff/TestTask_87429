@@ -12,10 +12,10 @@ class NetworkManager {
     static let shared = NetworkManager()
     
     //url + путь
-    let url = "https://fakestoreapi.com/products/1"
+    let url = "https://fakestoreapi.com/products"
     
     //запрос
-    func sendRequest(completion: @escaping (String, Float) -> Void) {
+    func sendRequest(completion: @escaping ([Response]) -> Void) {
         
         guard let url = URL(string: url) else { return }
         
@@ -32,8 +32,8 @@ class NetworkManager {
             guard let data else { return }
            
             do {
-                let result = try JSONDecoder().decode(Response.self, from: data)
-                completion(result.title, result.price)
+                let result = try JSONDecoder().decode([Response].self, from: data)
+                completion(result)
             } catch {
                 print(error.localizedDescription)
             }
